@@ -12,7 +12,8 @@ from PyQt5.QtWidgets import (
     QLabel,
 )
 
-from databases import Employee, Databases
+from databases import Databases
+from database.Employee import Employee
 
 
 class EmployeeRegistration(QDialog):
@@ -21,6 +22,7 @@ class EmployeeRegistration(QDialog):
         self.setWindowTitle("Register Employee")
         self.face_captured = False
         self.smiling = False
+        self._registered_employee = None
 
         # Haar cascade model
         self.face_cascade = cv2.CascadeClassifier(
@@ -208,6 +210,7 @@ class EmployeeRegistration(QDialog):
 
             # Add the new employee to the database
             databases.Employee.add_employee(employee)
+            self._registered_employee = employee
 
             QMessageBox.information(
                 self,
@@ -225,3 +228,6 @@ class EmployeeRegistration(QDialog):
                 f"There are no image to saved into database. Please capture the image first!",
             )
             return
+
+    def get_registered_employee(self) -> Employee:
+        return self._registered_employee
